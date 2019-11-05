@@ -1,0 +1,8 @@
+---
+- name: kubespray pre
+  hosts:
+    - "@cluster=example"
+  become: true
+  roles:
+    - kubespray_pre
+

@@ -1,0 +1,78 @@
+---
+
+#---
+# etcd.yml
+#---
+
+etcd_memory_limit: "2048M"
+# WARNING: BUG
+# https://github.com/kubernetes-sigs/kubespray/issues/4917
+# https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/configuration.md#--quota-backend-bytes
+etcd_quota_backend_bytes: "0"
+
+#---
+# k8s-cluster/k8s-cluster.yml
+#---
+
+# audit log for kubernetes
+kubernetes_audit: true
+
+# dynamic kubelet configuration
+# 設定変更は全部kubespray経由で行うので無くても問題ないと思われ
+#dynamic_kubelet_configuration: true
+
+# pod security policy (RBAC must be enabled either by having 'RBAC' in authorization_modes or kubeadm enabled)
+podsecuritypolicy_enabled: true
+
+## Encrypting Secret Data at Rest (experimental)
+#kube_encrypt_secret_data: true
+# example: inventory/cat/credentials/dev.kube_encrypt_token.creds
+#kube_encrypt_token: "{{ lookup('password', credentials_dir + '/' + env + '.kube_encrypt_token.creds length=32 chars=ascii_letters,digits') }}"
+
+# example: inventory/cat/credentials/dev.kubeadm_certificate_key.creds
+#kubeadm_certificate_key: "{{ lookup('password', credentials_dir + '/' + env + '.kubeadm_certificate_key.creds length=64 chars=hexdigits') | lower }}"
+
+##OIDC
+#kube_oidc_auth: true
+#kube_oidc_client_id: kubernetes
+#kube_oidc_groups_claim: groups
+#kube_oidc_url: https://keycloak.example.org:30443/auth/realms/example
+
+#---
+# roles/kubernetes/master/defaults/main/main.yml
+#---
+
+kube_apiserver_enable_admission_plugins: [NamespaceLifecycle, LimitRanger, ServiceAccount, DefaultStorageClass, DefaultTolerationSeconds, MutatingAdmissionWebhook, ValidatingAdmissionWebhook, Priority, ResourceQuota]
+
+#---
+# roles/network_plugin/calico/defaults/main.yml
+#---
+# Use IP-over-IP encapsulation across hosts
+#ipip: true
+# front ngx用
+#ipip_mode: CrossSubnet  # change to "CrossSubnet" if you only want ipip encapsulation on traffic going across subnets
+
+# CrossSubnetを使うときに、NodeのIPをCalicoが正しく見つけられるようにするため設定
+# この設定を行わないとNodeのIPが/32になってしまい、CrossSubnetが正常に動作しない
+# https://docs.projectcalico.org/v3.0/reference/node/configuration#ip-autodetection-methods
+#calico_ip_auto_method: "{{ _calico_ip_auto_method }}"
+
+# Enable Prometheus Metrics endpoint for felix
+calico_felix_prometheusmetricsenabled: true
+
+#---
+# group_vars/k8s-cluster/addons.yml
+#---
+
+# dashboardを無効化
+dashboard_enabled: false
+
+helm_enabled: false
+registry_enabled: false
+metrics_server_enabled: false
+local_path_provisioner_enabled: false
+local_volume_provisioner_enabled: false
+cephfs_provisioner_enabled: false
+rbd_provisioner_enabled: false
+ingress_nginx_enabled: false
+cert_manager_enabled: false
