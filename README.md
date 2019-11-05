@@ -5,9 +5,12 @@
 このリポジトリに含まれるもの
 
 - さくらのクラウド用のDynamic Inventory
-- nodeをデプロイするterraformのサンプルプロジェクト
-- node初期化用のansibleのサンプルプロジェクト
-- kubesprayで使用するinventoryのサンプル
+  - [sacloud_inventory.py](./ansible/sacloud_inventory.py)
+  - [kube_sacloud_inventory.py](./kubespray/inventory/kube_sacloud_inventory.py)
+- [nodeをデプロイするterraformのサンプルプロジェクト](./terraform)
+- [node初期化用のansibleのサンプルプロジェクト](./ansible)
+- [kubesprayで使用するinventoryのサンプル](./kubespray)
+- [utils](./utils)
 
 ## 手順
 
@@ -73,6 +76,9 @@ sudo pacman -U *.pkg.tar.zx
 ### Step 1. VM作成
 
 [terraform/README.md](./terraform/README.md)
+
+sshconfig:  
+[utils/README.md](./utils/README.md)
 
 ### Step 2. Ansibleの実行
 
